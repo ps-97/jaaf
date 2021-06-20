@@ -25,12 +25,19 @@ const App = () => {
     return (
       <Item
       item={item}
-     onPress={() =>
+     onPress={() => {
         setSelectedPackages(selectedPackages => {
           let prev_state = new Set(selectedPackages)
-          prev_state.has(item.packagename) ? prev_state.delete(item.packagename) : prev_state.add(item.packagename)
+          if (prev_state.has(item.packagename)) {
+            prev_state.delete(item.packagename)
+            PackagesModule.enablePackageEvent(item.packagename);
+          } else {
+            prev_state.add(item.packagename)
+            PackagesModule.disablePackageEvent(item.packagename);
+          }
           return prev_state
-        })}
+        })
+     }}
       backgroundColor={{ backgroundColor }}
       textColor={{ color }}
       />

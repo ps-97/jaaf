@@ -13,7 +13,9 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.topjohnwu.superuser.Shell;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -56,6 +58,29 @@ public class PackagesModule extends ReactContextBaseJavaModule {
     }
 
     cb.invoke(app_list);
+  }
+
+  @ReactMethod
+  public void getSuEvent() {
+    Process p;
+    try {
+      // Preform su to get root privledges
+      p = Runtime.getRuntime().exec("su");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  // Refactor these methods to togglePackageEvent()
+  @ReactMethod
+  public void disablePackageEvent(String  packageName) {
+    String disableCommand = String.format("pm disable %s", packageName);
+    Shell.su(disableCommand).submit();
+  }
+  @ReactMethod
+  public void enablePackageEvent(String packageName) {
+    String disableCommand = String.format("pm enable %s", packageName);
+    Shell.su(disableCommand).submit();
   }
 
 
